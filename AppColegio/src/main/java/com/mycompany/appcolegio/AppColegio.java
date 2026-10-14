@@ -30,3 +30,7 @@ public class AppColegio {
         });
     }
 }
+// NOTA: Se descartó la versión generada por el diseñador visual (GUI Builder) de NetBeans
+// debido a que generaba conflicto con variables duplicadas en los componentes (JLabel y JTextField),
+// además de crear Listeners automáticos en la Vista que violaban la arquitectura MVC.
+// Se implementa la interfaz de manera limpia garantizando desacoplamiento total con ControladorColegio.

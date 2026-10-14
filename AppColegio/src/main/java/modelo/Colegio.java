@@ -7,51 +7,44 @@
 package modelo;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Colegio {
+    private List<Estudiante> listaEstudiantes;
+    private List<Profesor> listaProfesores;
 
-    private String nombre;
-    private ArrayList<Persona> personas;
-
-    public Colegio(String nombre) {
-        this.nombre = nombre;
-        this.personas = new ArrayList<>();
+    public Colegio() {
+        this.listaEstudiantes = new ArrayList<>();
+        this.listaProfesores = new ArrayList<>();
     }
 
-    public String getNombre() { return nombre; }
-
-    public ArrayList<Persona> getPersonas() { return personas; }
-
-    public void agregarPersona(Persona p) {
-        personas.add(p);
+    public void agregarEstudiante(Estudiante e) {
+        listaEstudiantes.add(e);
     }
 
-    public Persona buscarPorDocumento(String documento) {
-        for (Persona p : personas) {
-            if (p.getDocumento().equals(documento)) {
-                return p;
-            }
+    public void agregarProfesor(Profesor p) {
+        listaProfesores.add(p);
+    }
+
+    public String generarReporteEstudiantes() {
+        if (listaEstudiantes.isEmpty()) {
+            return "No hay estudiantes registrados.";
         }
-        return null;
+        StringBuilder sb = new StringBuilder("=== REPORTE DE ESTUDIANTES ===\n\n");
+        for (Estudiante e : listaEstudiantes) {
+            sb.append(e.getInformacion()).append("\n------------------------------------------------\n");
+        }
+        return sb.toString();
     }
 
-    public int contarEstudiantes() {
-        int total = 0;
-        for (Persona p : personas) {
-            if (p instanceof Estudiante) {
-                total++;
-            }
+    public String generarReporteProfesores() {
+        if (listaProfesores.isEmpty()) {
+            return "No hay profesores registrados.";
         }
-        return total;
-    }
-
-    public int contarProfesores() {
-        int total = 0;
-        for (Persona p : personas) {
-            if (p instanceof Profesor) {
-                total++;
-            }
+        StringBuilder sb = new StringBuilder("=== REPORTE DE PROFESORES ===\n\n");
+        for (Profesor p : listaProfesores) {
+            sb.append(p.getInformacion()).append("\n------------------------------------------------\n");
         }
-        return total;
+        return sb.toString();
     }
 }

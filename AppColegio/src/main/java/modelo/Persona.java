@@ -6,24 +6,23 @@
 
 package modelo;
 
-public class Persona {
+public abstract class Persona {
+    protected String nombre;
+    protected String direccion;
+    protected String telefono;
+    protected String fechaNacimiento;
 
-    private String nombre;
-    private String documento;
-    private int edad;
-
-    public Persona(String nombre, String documento, int edad) {
+    public Persona(String nombre, String direccion, String telefono, String fechaNacimiento) {
         this.nombre = nombre;
-        this.documento = documento;
-        this.edad = edad;
+        this.direccion = direccion;
+        this.telefono = telefono;
+        this.fechaNacimiento = fechaNacimiento;
     }
 
     public String getNombre() { return nombre; }
-    public String getDocumento() { return documento; }
-    public int getEdad() { return edad; }
+    public String getDireccion() { return direccion; }
+    public String getTelefono() { return telefono; }
+    public String getFechaNacimiento() { return fechaNacimiento; }
 
-    @Override
-    public String toString() {
-        return "Nombre: " + nombre + " | Documento: " + documento + " | Edad: " + edad;
-    }
+    public abstract String getInformacion();
 }

@@ -7,21 +7,22 @@
 package modelo;
 
 public class Estudiante extends Persona {
-
+    private String codigo;
     private String grado;
-    private double promedio;
 
-    public Estudiante(String nombre, String documento, int edad, String grado, double promedio) {
-        super(nombre, documento, edad);
+    public Estudiante(String nombre, String direccion, String telefono, String fechaNacimiento, String codigo, String grado) {
+        super(nombre, direccion, telefono, fechaNacimiento);
+        this.codigo = codigo;
         this.grado = grado;
-        this.promedio = promedio;
     }
 
+    public String getCodigo() { return codigo; }
     public String getGrado() { return grado; }
-    public double getPromedio() { return promedio; }
 
     @Override
-    public String toString() {
-        return "[Estudiante] " + super.toString() + " | Grado: " + grado + " | Promedio: " + promedio;
+    public String getInformacion() {
+        return "ESTUDIANTE -> Código: " + codigo + " | Nombre: " + nombre + 
+               " | Grado: " + grado + " | Tel: " + telefono + 
+               " | Dir: " + direccion + " | F. Nac: " + fechaNacimiento;
     }
 }

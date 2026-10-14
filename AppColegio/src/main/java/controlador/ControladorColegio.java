@@ -6,55 +6,103 @@
 
 package controlador;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.print.PrinterException;
 import modelo.Colegio;
 import modelo.Estudiante;
-import modelo.Persona;
 import modelo.Profesor;
+import vista.FrmPrincipal;
 
-public class ControladorColegio {
+public class ControladorColegio implements ActionListener {
+    private FrmPrincipal vista;
+    private Colegio modelo;
 
-    private Colegio colegio;
+    public ControladorColegio(FrmPrincipal vista, Colegio modelo) {
+        this.vista = vista;
+        this.modelo = modelo;
 
-    public ControladorColegio(Colegio colegio) {
-        this.colegio = colegio;
+        // Asignar listeners a los botones de la vista
+        this.vista.getBtnRegistrarEstudiante().addActionListener(this);
+        this.vista.getBtnRegistrarProfesor().addActionListener(this);
+        this.vista.getBtnReporteEstudiantes().addActionListener(this);
+        this.vista.getBtnReporteProfesores().addActionListener(this);
+        this.vista.getBtnImprimir().addActionListener(this);
     }
 
-    public String registrarEstudiante(String nombre, String documento, int edad,
-                                      String grado, double promedio) {
-        if (colegio.buscarPorDocumento(documento) != null) {
-            return "Ya existe una persona con ese documento.";
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        Object source = e.getSource();
+
+        if (source == vista.getBtnRegistrarEstudiante()) {
+            registrarEstudiante();
+        } else if (source == vista.getBtnRegistrarProfesor()) {
+            registrarProfesor();
+        } else if (source == vista.getBtnReporteEstudiantes()) {
+            vista.mostrarReporte(modelo.generarReporteEstudiantes());
+        } else if (source == vista.getBtnReporteProfesores()) {
+            vista.mostrarReporte(modelo.generarReporteProfesores());
+        } else if (source == vista.getBtnImprimir()) {
+            imprimir();
         }
-        colegio.agregarPersona(new Estudiante(nombre, documento, edad, grado, promedio));
-        return "Estudiante registrado correctamente.";
     }
 
-    public String registrarProfesor(String nombre, String documento, int edad,
-                                    String materia, double salario) {
-        if (colegio.buscarPorDocumento(documento) != null) {
-            return "Ya existe una persona con ese documento.";
+    private void registrarEstudiante() {
+        try {
+            String nombre = vista.getNombre();
+            String direccion = vista.getDireccion();
+            String telefono = vista.getTelefono();
+            String fechaNac = vista.getFechaNacimiento();
+            String codigo = vista.getCodigo();
+            String grado = vista.getGrado();
+
+            if (nombre.isEmpty() || codigo.isEmpty()) {
+                vista.mostrarMensaje("Por favor complete los campos obligatorios (Nombre y Código).");
+                return;
+            }
+
+            Estudiante est = new Estudiante(nombre, direccion, telefono, fechaNac, codigo, grado);
+            modelo.agregarEstudiante(est);
+            vista.mostrarMensaje("Estudiante registrado exitosamente.");
+            vista.limpiarCampos();
+        } catch (Exception ex) {
+            vista.mostrarMensaje("Error al registrar estudiante: " + ex.getMessage());
         }
-        colegio.agregarPersona(new Profesor(nombre, documento, edad, materia, salario));
-        return "Profesor registrado correctamente.";
     }
 
-    public String buscar(String documento) {
-        Persona p = colegio.buscarPorDocumento(documento);
-        if (p == null) {
-            return "No se encontró ninguna persona con ese documento.";
+    private void registrarProfesor() {
+        try {
+            String nombre = vista.getNombre();
+            String direccion = vista.getDireccion();
+            String telefono = vista.getTelefono();
+            String fechaNac = vista.getFechaNacimiento();
+            String cedula = vista.getCedula();
+            String area = vista.getArea();
+            
+            double salarioHora = Double.parseDouble(vista.getSalarioHora());
+            int horas = Integer.parseInt(vista.getHoras());
+
+            if (nombre.isEmpty() || cedula.isEmpty()) {
+                vista.mostrarMensaje("Por favor complete los campos obligatorios (Nombre y Cédula).");
+                return;
+            }
+
+            Profesor prof = new Profesor(nombre, direccion, telefono, fechaNac, cedula, area, salarioHora, horas);
+            modelo.agregarProfesor(prof);
+            vista.mostrarMensaje("Profesor registrado exitosamente.");
+            vista.limpiarCampos();
+        } catch (NumberFormatException ex) {
+            vista.mostrarMensaje("Verifique que Salario por hora y Horas sean valores numéricos.");
+        } catch (Exception ex) {
+            vista.mostrarMensaje("Error al registrar profesor: " + ex.getMessage());
         }
-        return p.toString();
     }
 
-    public String listar() {
-        if (colegio.getPersonas().isEmpty()) {
-            return "No hay personas registradas.";
+    private void imprimir() {
+        try {
+            vista.imprimirReporte();
+        } catch (PrinterException ex) {
+            vista.mostrarMensaje("Error al imprimir el reporte: " + ex.getMessage());
         }
-        StringBuilder sb = new StringBuilder();
-        for (Persona p : colegio.getPersonas()) {
-            sb.append(p.toString()).append("\n");
-        }
-        sb.append("\nEstudiantes: ").append(colegio.contarEstudiantes());
-        sb.append(" | Profesores: ").append(colegio.contarProfesores());
-        return sb.toString();
     }
 }
